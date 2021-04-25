@@ -132,7 +132,7 @@ const columns = [
     dataIndex: 'no'
   },
   {
-    title: '描述',
+    title: '描述2',
     dataIndex: 'description',
     scopedSlots: { customRender: 'description' }
   },
