@@ -95,7 +95,6 @@
       <standard-table
         :columns="columns"
         :dataSource="dataSource"
-        :selectedRows.sync="selectedRows"
         @clear="onClear"
         @change="onChange"
         @selectedRowChange="onSelectChange"
@@ -162,7 +161,7 @@ const columns = [
 
 const dataSource = []
 
-for (let i = 0; i < 100; i++) {
+for (let i = 0; i < 70; i++) {
   dataSource.push({
     key: i,
     no: 'NO ' + i,
@@ -186,6 +185,9 @@ export default {
   },
   authorize: {
     deleteRecord: 'delete'
+  },
+  created() {
+    console.log(dataSource, 'da')
   },
   methods: {
     deleteRecord(key) {

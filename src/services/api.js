@@ -7,4 +7,6 @@ module.exports = {
   ROUTES: `${BASE_URL}/routes`,
   GOODS: `${BASE_URL}/goods`,
   GOODS_COLUMNS: `${BASE_URL}/columns`,
+  MONITOR_MAIN_ONE_URL: `${BASE_URL}/v1/backTracking/main/queryByPage`,
+  MONITOR_BY_ORDER_NO_URL: `${BASE_URL}/v1/backTracking/main/queryTrack`,
 }

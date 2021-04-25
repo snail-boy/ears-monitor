@@ -1,4 +1,5 @@
 import Cookie from 'js-cookie'
+// import {S_OK} from "./constant";
 // 401拦截
 const resp401 = {
   /**
@@ -48,6 +49,16 @@ const resp403 = {
   }
 }
 
+const respNo00000 = {
+  onFulfilled(response) {
+    // const {message} = options
+    // if (response.data.code !== S_OK && response.data.code !== 401 && response.data.code !== 403) {
+      // message.error('返回非成功状态')
+    // }
+    return response
+  }
+}
+
 const reqCommon = {
   /**
    * 发送请求之前做些什么
@@ -78,5 +89,5 @@ const reqCommon = {
 
 export default {
   request: [reqCommon], // 请求拦截
-  response: [resp401, resp403] // 响应拦截
+  response: [resp401, resp403, respNo00000] // 响应拦截
 }

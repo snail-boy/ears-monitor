@@ -18,6 +18,8 @@ export async function getRoutesConfig() {
   return request(ROUTES, METHOD.GET)
 }
 
+
+
 /**
  * 退出登录
  */

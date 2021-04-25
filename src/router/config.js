@@ -98,7 +98,7 @@ const options = {
             {
               path: 'replay',
               name: '视频回放',
-              component: () => import('@/pages/monitor/step'),
+              component: () => import('@/pages/monitor/replay'),
             }
           ]
         },
