@@ -96,6 +96,10 @@ const options = {
               component: () => import('@/pages/monitor/replaySetting'),
             },
             {
+              path: 'replayList',
+              name: '视频列表',
+              component: () => import('@/pages/monitor/replayList'),
+            }, {
               path: 'replay',
               name: '视频回放',
               component: () => import('@/pages/monitor/replay'),
