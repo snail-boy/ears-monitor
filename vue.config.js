@@ -37,6 +37,13 @@ const assetsCDN = {
 module.exports = {
   devServer: {
     proxy: {
+      // ['/api']: {
+      //   target: `http://track.test.shie.com.cn/`,
+      //   changeOrigin: true,
+      //   pathRewrite: {
+      //     ['^/api']: ''
+      //   }
+      // },
       '/api': { //此处要与 /services/api.js 中的 API_PROXY_PREFIX 值保持一致
         target: process.env.VUE_APP_API_BASE_URL,
         changeOrigin: true,

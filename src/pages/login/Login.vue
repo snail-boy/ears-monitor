@@ -33,6 +33,22 @@
                 <a-icon slot="prefix" type="lock" />
               </a-input>
             </a-form-item>
+            <a-form-item>
+              <a-select default-value="lucy" @change="handleChange">
+                <a-select-option value="jack">
+                  Jack
+                </a-select-option>
+                <a-select-option value="lucy">
+                  Lucy
+                </a-select-option>
+                <a-select-option value="disabled" disabled>
+                  Disabled
+                </a-select-option>
+                <a-select-option value="Yiminghe">
+                  yiminghe
+                </a-select-option>
+              </a-select>
+            </a-form-item>
           </a-tab-pane>
           <a-tab-pane tab="手机号登录" key="2">
             <a-form-item>
@@ -49,6 +65,8 @@
                 </a-col>
                 <a-col :span="8" style="padding-left: 4px">
                   <a-button style="width: 100%" class="captcha-button" size="large">获取验证码</a-button>
+                </a-col>
+                <a-col :span="8" style="padding-left: 4px">
                 </a-col>
               </a-row>
             </a-form-item>

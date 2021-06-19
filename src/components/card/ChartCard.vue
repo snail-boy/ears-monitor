@@ -33,6 +33,10 @@ export default {
     overflow: hidden;
     width: 100%;
   }
+  .chart-card-title {
+    /*color: black;*/
+    /*font-size: 14px;*/
+  }
   .chart-card-header .meta{
     position: relative;
     overflow: hidden;

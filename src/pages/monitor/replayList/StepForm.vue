@@ -22,7 +22,7 @@
                       :labelCol="{span: 5}"
                       :wrapperCol="{span: 18, offset: 1}"
               >
-                <a-input-number
+                <a-input
                         v-decorator="['applicantCertNo', { rules: [{ required: false}] }]"
                         style="width: 100%" placeholder="请输入"/>
               </a-form-item>
@@ -36,7 +36,9 @@
                       :wrapperCol="{span: 18, offset: 1}"
               >
                 <a-date-picker
+                        format="YYYY-MM-DD HH:mm:ss"
                         v-decorator="['beginTime', { rules: [{ required: false}] }]"
+                        :show-time="{ defaultValue: moment('00:00:00', 'HH:mm:ss') }"
                         style="width: 100%" placeholder="选择时间"/>
               </a-form-item>
             </a-col>
@@ -57,9 +59,7 @@
               :columns="columns"
               :dataSource="dataSource"
               rowKey="orderNo"
-              @clear="onClear"
-              @change="onChange"
-              @selectedRowChange="onSelectChange"
+              :loading="loading"
               :pagination="{
               current: pageNo,
               pageSize: pageSize,
@@ -72,14 +72,17 @@
               onShowSizeChange: onSizeChange,
             }"
       >
+         <span slot="duration" slot-scope="{text}">
+          {{ formatTime(text) }}
+        </span>
+        <span slot="fileSize" slot-scope="{text}">
+          {{ byteToKb(text) }}
+        </span>
         <div slot="action" slot-scope="{text, record}">
-          <a style="margin-right: 8px" @click="handleRecord(record)">
+          <a v-if="record.status === '生效'" style="margin-right: 8px" @click="handleRecord(record)">
             播放视频
           </a>
         </div>
-        <template slot="statusTitle">
-          <a-icon @click.native="onStatusTitleClick" type="info-circle"/>
-        </template>
       </standard-table>
     </div>
   </a-card>
@@ -89,7 +92,9 @@
   import StandardTable from '@/components/table/StandardTable'
   import {monitorByOrderNoUrl, monitorMainOneUrl} from "../../../services/dataSource";
   import {S_OK} from "../../../utils/constant";
-  // import {monitorMainOneUrl} from "../../../services/dataSource";
+  import moment from "moment";
+  import {mapMutations} from "vuex";
+  import {byteToKb, formatDuring} from "../../../utils/util";
 
   const columns = [
     {
@@ -128,20 +133,25 @@
     {
       title: '视频时长',
       dataIndex: 'duration',
+      scopedSlots: { customRender: "duration" }
     },
     {
       title: '文件大小',
       dataIndex: 'fileSize',
+      scopedSlots: { customRender: "fileSize" }
     },
     {
       title: '视频状态',
-      dataIndex: 'status',
-      sorter: true
+      dataIndex: 'status'
     },
     {
-      title: '编辑',
-      dataIndex: '',
-      scopedSlots: {customRender: 'action'}
+      title: '过期时间',
+      dataIndex: 'expireTime'
+    },
+    {
+      title: '操作',
+      dataIndex: 'action',
+      scopedSlots: { customRender: 'action'}
     }
   ]
 
@@ -157,28 +167,37 @@
         pageNo: 1,
         pageSize: 10,
         total: 0,
-        conditions: '',
-        dataObj: {},
-        travel: []
+        conditions: {
+          applicantName: '',
+          applicantCertNo: '',
+          beginTime: ''
+        },
+        travel: [],
+        loading: true
       }
     },
     authorize: {
       deleteRecord: 'delete'
     },
     created() {
-      let params = {
-        applicantName: '',
-        applicantCertNo: '',
-        beginTime: ''
-      }
-      this.getDataList(params)
+      this.getDataList()
     },
     methods: {
+      moment,
+      ...mapMutations('content', ['setVideoEvents']),
+      formatTime(time) {
+        return formatDuring(time)
+      },
+      byteToKb(byte) {
+        return byteToKb(byte)
+      },
       searchList() {
         this.form.validateFields((err, values) => {
           if (!err) {
             console.log('Received values of form: ', values);
-            this.getDataList(values)
+            this.conditions = values
+            this.conditions.beginTime = moment(values.beginTime).format('YYYY-MM-DD HH:mm:ss')
+            this.getDataList()
           }
         })
       },
@@ -189,33 +208,28 @@
         this.dataSource = list.map((val, index) => {
           return Object.assign({}, val, {key: index + 1})
         })
-
         this.pageNo = pageNo
         this.total = total
         this.pageSize = pageSize
+        this.loading = false
       },
       async handleRecord(v) {
-        const result = await monitorByOrderNoUrl({orderNo: v})
-        if (result.code === S_OK) {
-          this.dataObj = result.result.events
-          this.travel = result.result.tracks
-          this.$router.push('/form/replay')
+        this.loading = true
+        const result = await monitorByOrderNoUrl({orderNo: v.orderNo})
+        if (result.data.code === S_OK) {
+          this.travel = result.data.result.tracks
+          const events = result.data.result.events
+          if(!events.length) {
+            this.$message.warning('无数据， 无法播放')
+          }else {
+            this.setVideoEvents(result.data.result.events)
+            this.$router.push('/monitor/replay')
+          }
+          this.loading = false
         }
       },
       toggleAdvanced() {
         this.advanced = !this.advanced
-      },
-      onClear() {
-        this.$message.info('您清空了勾选的所有行')
-      },
-      onStatusTitleClick() {
-        this.$message.info('你点击了状态栏表头')
-      },
-      onChange() {
-        this.$message.info('表格状态改变了')
-      },
-      onSelectChange() {
-        this.$message.info('选中行改变了')
       },
       onPageChange(pageNo, pageSize) {
         this.pageNo = pageNo
@@ -234,7 +248,7 @@
       onRefresh(conditions) {
         this.conditions = conditions
         this.getDataList()
-      },
+      }
     }
   }
 </script>

@@ -15,8 +15,8 @@ export async function monitorMainOneUrl(params) {
 }
 
 // 视频播放接口
-export async function monitorByOrderNoUrl() {
-  return request(MONITOR_BY_ORDER_NO_URL, METHOD.POST)
+export async function monitorByOrderNoUrl(params) {
+  return request(MONITOR_BY_ORDER_NO_URL, METHOD.GET, params)
 }
 
 
