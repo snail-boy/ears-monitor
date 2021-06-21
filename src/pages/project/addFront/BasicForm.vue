@@ -1,107 +1,58 @@
 <template>
-  <a-card :body-style="{padding: '24px 32px'}" :bordered="false">
-    <a-form>
-      <a-form-item
-        :label="$t('title')"
-        :labelCol="{span: 7}"
-        :wrapperCol="{span: 10}"
-      >
-        <a-input :placeholder="$t('titleInput')" />
-      </a-form-item>
-      <a-form-item
-              :label="$t('baseColor')"
-              :labelCol="{span: 7}"
-              :wrapperCol="{span: 10}"
-      >
-        <a-input :placeholder="$t('baseColorInput')" />
-      </a-form-item>
-      <a-form-item
-              :label="$t('isCountDown')"
-              :labelCol="{span: 7}"
-              :wrapperCol="{span: 10}"
-              :required="false"
-      >
-        <a-radio-group v-model="countDown">
-          <a-radio :value="1">是</a-radio>
-          <a-radio :value="2">否</a-radio>
-        </a-radio-group>
-      </a-form-item>
-      <a-form-item
-        :label="$t('metrics')"
-        :labelCol="{span: 7}"
-        :wrapperCol="{span: 10}"
-      >
-        <a-textarea rows="4" :placeholder="$t('metricsInput')"/>
-      </a-form-item>
-      <a-form-item
-        :label="$t('customer')"
-        :labelCol="{span: 7}"
-        :wrapperCol="{span: 10}"
-        :required="false"
-      >
-        <a-input :placeholder="$t('customerInput')"/>
-      </a-form-item>
-      <a-form-item
-        :label="$t('critics')"
-        :labelCol="{span: 7}"
-        :wrapperCol="{span: 10}"
-        :required="false"
-      >
-        <a-input :placeholder="$t('criticsInput')"/>
-      </a-form-item>
-      <a-form-item
-        :label="$t('weight')"
-        :labelCol="{span: 7}"
-        :wrapperCol="{span: 10}"
-        :required="false"
-      >
-        <a-input-number :min="0" :max="100"/>
-        <span>%</span>
-      </a-form-item>
-      <a-form-item
-        :label="$t('disclosure')"
-        :labelCol="{span: 7}"
-        :wrapperCol="{span: 10}"
-        :required="false"
-        :help="$t('disclosureDesc')"
-      >
-        <a-radio-group v-model="value">
-          <a-radio :value="1">{{$t('public')}}</a-radio>
-          <a-radio :value="2">{{$t('partially')}}</a-radio>
-          <a-radio :value="3">{{$t('private')}}</a-radio>
-        </a-radio-group>
-        <a-select mode="multiple" v-if="value === 2">
-          <a-select-option value="4">{{$t('colleague1')}}</a-select-option>
-          <a-select-option value="5">{{$t('colleague2')}}</a-select-option>
-          <a-select-option value="6">{{$t('colleague3')}}</a-select-option>
-        </a-select>
-      </a-form-item>
-      <a-form-item style="margin-top: 24px" :wrapperCol="{span: 10, offset: 7}">
-        <a-button type="primary">{{$t('submit')}}</a-button>
-        <a-button style="margin-left: 8px">{{$t('save')}}</a-button>
-      </a-form-item>
-    </a-form>
+  <a-card :bordered="false">
+    <a-steps class="steps" :current="current">
+      <a-step :title="$t('step1')" />
+      <a-step :title="$t('step2')" />
+      <a-step :title="$t('step3')" />
+    </a-steps>
+    <div class="content">
+      <step1 v-if="current === 0" @nextStep="nextStep"></step1>
+      <step2 v-if="current === 1" @nextStep="nextStep" @prevStep="prevStep"></step2>
+      <step3 v-if="current === 2" @prevStep="prevStep" @finish="finish"></step3>
+    </div>
   </a-card>
 </template>
 
 <script>
+import Step1 from './Step1'
+import Step2 from './Step2'
+import Step3 from './Step3'
+
 export default {
-  name: 'BasicForm',
+  name: 'StepForm',
   i18n: require('./i18n'),
+  components: {Step1, Step2, Step3},
   data () {
     return {
-      value: 1,
-      countDown: 1
+      current: 0,
     }
   },
   computed: {
     desc() {
       return this.$t('pageDesc')
     }
+  },
+  methods: {
+    nextStep () {
+      if (this.current < 2) {
+        this.current += 1
+      }
+    },
+    prevStep () {
+      if (this.current > 0) {
+        this.current -= 1
+      }
+    },
+    finish () {
+      this.current = 0
+    }
   }
 }
 </script>
 
-<style scoped>
-
+<style lang="less" scoped>
+  .steps{
+    max-width: 950px;
+    margin: 16px auto;
+  }
 </style>

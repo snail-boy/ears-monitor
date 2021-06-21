@@ -11,13 +11,16 @@
     "deploy": "gh-pages -d dist -b pages -r https://gitee.com/iczer/vue-antd-admin.git",
     "docs:dev": "vuepress dev docs",
     "docs:build": "vuepress build docs",
-    "docs:deploy": "vuepress build docs && gh-pages -d docs/.vuepress/dist -b master -r https://gitee.com/iczer/vue-antd-admin-docs.git"
+    "docs:deploy": "vuepress build docs && gh-pages -d docs/.vuepress/dist -b master -r https://gitee.com/iczer/vue-antd-admin-docs.git",
+    "addProject": "node src/utils/jsToExec.js"
   },
   "dependencies": {
     "@antv/data-set": "^0.11.4",
     "animate.css": "^4.1.0",
     "ant-design-vue": "1.7.2",
     "axios": "^0.19.2",
+    "chalk": "latest",
+    "cheerio": "^1.0.0-rc.10",
     "clipboard": "^2.0.6",
     "core-js": "^3.6.5",
     "date-fns": "^2.14.0",
@@ -27,12 +30,15 @@
     "mockjs": "^1.1.0",
     "moment": "^2.26.0",
     "nprogress": "^0.2.0",
+    "shelljs": "^0.8.4",
     "viser-vue": "^2.4.8",
     "vue": "^2.6.11",
     "vue-i18n": "^8.18.2",
     "vue-router": "^3.3.4",
     "vuedraggable": "^2.23.2",
-    "vuex": "^3.4.0"
+    "vuex": "^3.4.0",
+    "word2html": "^0.0.1",
+    "iconv-lite": "latest"
   },
   "devDependencies": {
     "@ant-design/colors": "^4.0.1",

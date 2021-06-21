@@ -1,6 +1,6 @@
 .DS_Store
 node_modules/
-#dist/
+dist/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
@@ -17,4 +17,4 @@ selenium-debug.log
 *.sln
 package-lock.json
 .env.production.local
-dist/
+#dist/
